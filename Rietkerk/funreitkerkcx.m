@@ -1,11 +1,24 @@
-function Ut=funvegmodx(t,U)
+function Ut=funreitkerkcx(t,U,parameters)
 
 
-global Dh Dw  
-global a f p g m v
-global Nx
-global Dx1 Dx2 
-global p0 Tyear
+% global Dh Dw  
+% global a f p g m v
+% global Nx
+% global Dx1 Dx2 
+% global p0 Tyear
+
+Dh = parameters.Dh;
+Dw = parameters.Dw;
+a = parameters.a;
+f = parameters.f;
+g = parameters.g;
+v = parameters.v;
+m = parameters.m;
+Dx1 = parameters.Dx1;
+Dx2 = parameters.Dx2;
+p0 = parameters.p0;
+Tyear = parameters.Tyear;
+Nx = parameters.Nx;
 
 tmp=reshape(U,Nx,3);
 

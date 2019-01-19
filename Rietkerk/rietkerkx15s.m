@@ -2,11 +2,11 @@ close all
 clear all
 tic
 
-global Dh Dw  
-global a f p g m v
-global Nx
-global Dx1 Dx2 
-global p0 Tyear
+% global Dh Dw  
+% global a f p g m v
+% global Nx
+% global Dx1 Dx2 
+% global p0 Tyear
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %parameters and units
@@ -31,6 +31,21 @@ R=MAP/365; %mm/day
 LxM =500; %m
 Nx = 512;
 
+parameters.c = c;
+parameters.gmax = gmax;
+parameters.k1 = k1;
+parameters.d = d;
+parameters.DB0 = DB0;
+parameters.fr = fr;
+parameters.alpha = alpha;
+parameters.k2 = k2;
+parameters.W0r = W0r;
+parameters.rw = rw;
+parameters.DW0 = DW0;
+parameters.DH0 = DH0;
+parameters.R = R;
+parameters.LxM = LxM;
+parameters.Nx = Nx;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %nondimensial parameters
@@ -47,14 +62,22 @@ Lx=LxM/X0;
 
 Dw=DW0/DB0;
 Dh=DH0/DB0;
-m=d*T0;
 a=alpha*T0;
 f=W0r;
+m=d*T0;
 g=k2/(k1*c);
 v=rw*T0;
 p0=R*T0/k1;
 
 
+parameters.Dw = Dw;
+parameters.Dh = Dh;
+parameters.a = a;
+parameters.f = f;
+parameters.m = m;
+parameters.g = g;
+parameters.v = v;
+parameters.p0 = p0;
 
 
 
@@ -85,7 +108,8 @@ Dx2(Nx,1)=1; Dx2(1,Nx)=1;
 Dx1=Dx1./dx;
 Dx2=Dx2./dx.^2;
 
-
+parameters.Dx1 = Dx1;
+parameters.Dx2 = Dx2;
 
 %initial condition
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -155,11 +179,12 @@ Thour=Tday/24;
 Tmin=Thour/60;
 Tyear=Tday*365;
 
+parameters.Tyear = Tyear;
 
 tspan=linspace(0,500*Tyear,101);
 
         
-        [tr, Ur]=ode15s('funreitkerkcx',tspan,Ulast);
+        [tr, Ur]=ode15s(@(t,U) funreitkerkcx(t,U,parameters),tspan,Ulast);
 
         Hr=Ur(:,1:Nx);
         Wr=Ur(:,Nx+(1:Nx));

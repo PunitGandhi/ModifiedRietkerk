@@ -1,26 +1,19 @@
 function Ut=funreitkerkcx(t,U,parameters)
 
-
-% global Dh Dw  
-% global a f p g m v
-% global Nx
-% global Dx1 Dx2 
-% global p0 Tyear
-
-Dh = parameters.Dh;
-Dw = parameters.Dw;
-a = parameters.a;
-f = parameters.f;
-g = parameters.g;
-v = parameters.v;
-m = parameters.m;
-Dx1 = parameters.Dx1;
-Dx2 = parameters.Dx2;
-p0 = parameters.p0;
-Tyear = parameters.Tyear;
-Nx = parameters.Nx;
-alpha = parameters.alpha;
-Cnrm = parameters.Cnrm;
+Dh = parameters.Dh; % diffusion of surface water
+Dw = parameters.Dw; % diffusion of soil water.
+a = parameters.a;  % infiltration parameter
+f = parameters.f;  % infiltration parameter
+g = parameters.g;  % transpiration param
+v = parameters.v;  % evaporation (nu)
+m = parameters.m;  % mortality
+Dx1 = parameters.Dx1;  % differentiation matrix for first derivative - not used here
+Dx2 = parameters.Dx2;  % diff. matrix for second derivative
+p0 = parameters.p0;    % mean annual precipitation
+Tyear = parameters.Tyear;  % length of a year in units of equations
+Nx = parameters.Nx;  % number of spatial discretization points
+pseason = parameters.pseason;  % precip parameter - seasonality
+Cnrm = parameters.Cnrm;        % normalization constant
 
 
 tmp=reshape(U,Nx,3);
@@ -32,7 +25,7 @@ B=tmp(:,3);
 Gw= W./(1.0+W);
 In= a*(B + f)./(B + 1.0);
 
-Ht= Dh*(Dx2*H) -  In.*H + precip(t,p0,Tyear);  
+Ht= Dh*(Dx2*H) -  In.*H + precip(t,p0,Tyear, pseason, Cnrm);  
 
 Wt= Dw*(Dx2*W) + In.*H - v*W - g*Gw.*B;
 
@@ -41,9 +34,9 @@ Bt= Dx2*B - m*B + Gw.*B;
 %display(precip(p,t))
 Ut=[Ht(:); Wt(:); Bt(:)];
 
-function pt=precip(t,p0,Tyear)
+function pt=precip(t,p0,Tyear, pseason, Cnrm)
 %pt=p0  *  sech(  cos(pi*t/Tyear) / epsilon ).^2  * Constant
- pt=p0  *  sech(alpha*cos(pi*t/Tyear)           ).^2  *  Cnrm;
+ pt=p0  *  sech(pseason*cos(pi*t/Tyear)           ).^2  *  Cnrm;
  
 %these values may only be accurate to 3 or 4 decimals.
 %epsilon=1, Constant=1.494515826022178

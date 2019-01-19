@@ -68,9 +68,9 @@ m=d*T0;
 g=k2/(k1*c);
 v=rw*T0;
 p0=R*T0/k1;
-alpha=0;
+pseason=0;
 Nacc=100000;
-Cnrm=Nacc/sum(sech(alpha*cos(pi*linspace(1/Nacc,1,Nacc))).^2);
+Cnrm=Nacc/sum(sech(pseason*cos(pi*linspace(1/Nacc,1,Nacc))).^2);
 
 parameters.Dw = Dw;
 parameters.Dh = Dh;
@@ -80,7 +80,7 @@ parameters.m = m;
 parameters.g = g;
 parameters.v = v;
 parameters.p0 = p0;
-parameters.alpha = alpha;
+parameters.pseason = pseason;
 parameters.Cnrm = Cnrm;
 
 

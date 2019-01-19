@@ -19,6 +19,9 @@ Dx2 = parameters.Dx2;
 p0 = parameters.p0;
 Tyear = parameters.Tyear;
 Nx = parameters.Nx;
+alpha = parameters.alpha;
+Cnrm = parameters.Cnrm;
+
 
 tmp=reshape(U,Nx,3);
 
@@ -40,7 +43,7 @@ Ut=[Ht(:); Wt(:); Bt(:)];
 
 function pt=precip(t,p0,Tyear)
 %pt=p0  *  sech(  cos(pi*t/Tyear) / epsilon ).^2  * Constant
- pt=p0  *  sech(8*cos(pi*t/Tyear)           ).^2  *  12.482485478454578897;
+ pt=p0  *  sech(alpha*cos(pi*t/Tyear)           ).^2  *  Cnrm;
  
 %these values may only be accurate to 3 or 4 decimals.
 %epsilon=1, Constant=1.494515826022178

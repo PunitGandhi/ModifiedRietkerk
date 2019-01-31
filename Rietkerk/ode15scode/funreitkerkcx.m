@@ -1,17 +1,24 @@
 function Ut=funreitkerkcx(t,U,parameters)
 
-Dh = parameters.Dh; % diffusion of surface water
-Dw = parameters.Dw; % diffusion of soil water.
-a = parameters.a;  % infiltration parameter
-f = parameters.f;  % infiltration parameter
-g = parameters.g;  % transpiration param
-v = parameters.v;  % evaporation (nu)
-m = parameters.m;  % mortality
+wC=parameters.wC; %water use efficiency
+Gamma=parameters.Gamma;
+k1=parameters.k1;
+DB0=parameters.DB0;
+DW0=parameters.DW0;
+kappa=parameters.kappa;
+Lev=parameters.Lev;
+Q=parameters.Q ;
+M=parameters.M ;
+VH0=parameters.VH0 ;
+f=parameters.f ;
+
+Nx=parameters.Nx ;
+P0=parameters.P0;
+
 Dx1 = parameters.Dx1;  % differentiation matrix for first derivative - not used here
 Dx2 = parameters.Dx2;  % diff. matrix for second derivative
-p0 = parameters.p0;    % mean annual precipitation
+
 Tyear = parameters.Tyear;  % length of a year in units of equations
-Nx = parameters.Nx;  % number of spatial discretization points
 pseason = parameters.pseason;  % precip parameter - seasonality
 Cnrm = parameters.Cnrm;        % normalization constant
 
@@ -22,14 +29,14 @@ H=tmp(:,1);
 W=tmp(:,2);
 B=tmp(:,3);
 
-Gw= W./(1.0+W);
-In= a*(B + f)./(B + 1.0);
+Gw= Gamma*W./(W+k1);
+In= kappa*(B + Q*f)./(B + Q);
 
-Ht= Dh*(Dx2*H) -  In.*H + precip(t,p0,Tyear, pseason, Cnrm);  
+Ht= VH0*(Dx1*H) -  In.*H + precip(t,P0,Tyear, pseason, Cnrm);  
 
-Wt= Dw*(Dx2*W) + In.*H - v*W - g*Gw.*B;
+Wt= In.*H - Lev*W - Gw.*B + DW0*(Dx2*W);
 
-Bt= Dx2*B - m*B + Gw.*B;
+Bt= DB0*Dx2*B - M*B + wC*Gw.*B;
 
 %display(precip(p,t))
 Ut=[Ht(:); Wt(:); Bt(:)];
